@@ -12,5 +12,7 @@ namespace Bookstore.Models.ViewModels
         //paging
         public PagingInfo PagingInfo { get; set; }
 
+        //category
+        public string Class { get; set; }
     }
 }

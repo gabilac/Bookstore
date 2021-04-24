@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Bookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Bookstore.Infrastructure
 {
-    //taghelpers part1
     [HtmlTargetElement("div", Attributes = "page-model")]
     public class PageLinkTagHelper : TagHelper
     {
@@ -19,14 +19,16 @@ namespace Bookstore.Infrastructure
             urlHelperFactory = hp;
         }
 
-
-        //taghelpers part2
         [ViewContext]
         [HtmlAttributeNotBound]
 
         public ViewContext ViewContext { get; set; }
         public PagingInfo PageModel { get; set; }
         public string PageAction { get; set; }
+
+        //filtering
+        [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
+        public Dictionary<string, object> PageUrlValues { get; set; } = new Dictionary<string, object>();
 
         //styling
         public bool PageClassesEnabled { get; set; } = false;
@@ -45,11 +47,9 @@ namespace Bookstore.Infrastructure
             {
                 //build tag
                 TagBuilder tag = new TagBuilder("a");
-                tag.Attributes["href"] = urlHelper.Action(PageAction, new { page = i });
-                tag.InnerHtml.Append(i.ToString());
 
-                //append
-                result.InnerHtml.AppendHtml(tag);
+                PageUrlValues["page"] = i;
+                tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
 
                 //styling
                 if (PageClassesEnabled)
@@ -57,6 +57,12 @@ namespace Bookstore.Infrastructure
                     tag.AddCssClass(PageClass);
                     tag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
                 }
+
+                tag.InnerHtml.Append(i.ToString());
+
+                //append
+                result.InnerHtml.AppendHtml(tag);
+                
             }
 
             output.Content.AppendHtml(result.InnerHtml);

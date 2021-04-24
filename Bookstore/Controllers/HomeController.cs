@@ -26,12 +26,14 @@ namespace Bookstore.Controllers
             _repository = repository;
         }
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(string category, int page = 1)
         {
             return View(new BookListViewModel
                 {
                     //pulls in books
                     Books = _repository.Books
+                    //filtering
+                    .Where(b => category == null || b.Class == category)
                     .OrderBy(b => b.BookId)
                     .Skip((page - 1) * PageSize)
                     .Take(PageSize)
@@ -42,8 +44,13 @@ namespace Bookstore.Controllers
                     {
                         CurrentPage = page,
                         ItemsPerPage = PageSize,
-                        TotalNumItems = _repository.Books.Count()
-                    }
+                        TotalNumItems = category == null ? _repository.Books.Count() :
+                        _repository.Books.Where(x => x.Class == category).Count()
+                    },
+
+                    //category
+                    Class = category
+
             });
         }
 
