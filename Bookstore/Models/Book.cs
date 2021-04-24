@@ -9,18 +9,22 @@ namespace Bookstore.Models
         public int BookId { get; set; }
 
         //collected variables
-        [Required] //all fields required
+        [Required(ErrorMessage = "Title is required")] //all fields required
         public string Title { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Author is required")]
         public string Author { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Publisher is required")]
         public string Publisher { get; set; }
-        [Required]
-        public string ISBN { get; set; }
-        [Required]
+        [Required(ErrorMessage = "ISBN is required")]
+        [RegularExpression("[0-9]{3}-[0-9]{10}", ErrorMessage = "ISBN should be formatted as ###-##########")]
+        public string Isbn { get; set; }
+        [Required(ErrorMessage = "Classification/Category is required")]
         public string Class { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Price is required")]
         [DataType(DataType.Currency)] //formats price correctly
-        public float Price { get; set; }
+        public double Price { get; set; }
+        [Required(ErrorMessage = "Page Count required")]
+        public int PageCount { get; set; }
+
     }
 }

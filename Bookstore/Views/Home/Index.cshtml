@@ -1,10 +1,37 @@
 ﻿@{
     ViewData["Title"] = "My Bookstore";
 }
+@model BookListViewModel
 
-<header>
-    <h1>@ViewBag.Title</h1>
-    <h4>Check out this cool online bookstore</h4>
-    
-</header>
 
+<h3 class="text-center">Check out this cool online bookstore. Get all the info you need right here!</h3>
+<br />
+
+@*changed from table to cards, changed spacing row/col, card-body, card-title, card-footer *@
+<div class="row justify-content-md-center">
+
+
+    @foreach (Book b in Model.Books)
+    {
+        <div class="card card-outline-dark m-2">
+            <div class="card-body">
+                <h3 class="card-title text-info">@b.Title</h3>
+                <h5 class="card-subtitle text-muted">@b.Author</h5>
+                <br />
+                <p>Publisher: @b.Publisher</p>
+                <p>Classification/Category: @b.Class</p>
+                <p>Page Count: @b.PageCount</p>
+                <p>Price: $@b.Price</p>
+            </div>
+            <div class="card-footer text-center text-dark">ISBN: @b.Isbn</div>
+        </div>
+    }
+
+</div>
+
+
+
+<div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true" page-class="btn"
+     page-class-normal="btn-outline-dark"
+     page-class-selected="btn-dark"
+     class="text-center"></div>
